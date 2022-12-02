@@ -1,4 +1,4 @@
-module go-wait
+module go-jwt-aud
 
 go 1.15
 

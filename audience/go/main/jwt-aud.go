@@ -1,35 +1,24 @@
 package main
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/Kong/go-pdk"
 	"github.com/Kong/go-pdk/server"
 )
 
 type Config struct {
-	WaitTime int
+	Audience string
 }
 
 func New() interface{} {
 	return &Config{}
 }
 
-var requests = make(map[string]time.Time)
-
 func (config Config) Access(kong *pdk.PDK) {
-	_ = kong.Response.SetHeader("x-wait-time", fmt.Sprintf("%d seconds", config.WaitTime))
-
-	host, _ := kong.Request.GetHost()
-	fmt.Printf("host: %s", host)
-	kong.Log.Info(fmt.Sprintf("host: %s", host))
-	lastRequest, exists := requests[host]
-
-	if exists && time.Now().Sub(lastRequest) < time.Duration(config.WaitTime)*time.Second {
-		kong.Response.Exit(400, "Maximum Requests Reached", make(map[string][]string))
-	} else {
-		requests[host] = time.Now()
+	host, _ := kong.Request.GetHeader("Authorization")
+	token := GetToken(host)
+	aud := GetAudience(token)
+	if !Contains(aud, config.Audience) {
+		kong.Response.Exit(403, "Invalid audience", make(map[string][]string))
 	}
 }
 

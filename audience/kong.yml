@@ -8,6 +8,6 @@ services:
         paths:
           - /gists
     plugins:
-      - name: go-wait
+      - name: go-jwt-aud
         config:
-          waittime: 5
+          audience: devcommon-5.blameless.io 
