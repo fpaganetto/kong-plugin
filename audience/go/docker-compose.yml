@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  go-builder:
+    image: go-builder
+    volumes:
+      - ./main:/app/main
+      - ./bin:/app/bin
+    # entrypoint: sh
+    # stdin_open: true
+    # tty: true
