@@ -1,0 +1,19 @@
+# values.yaml
+plugins:
+  configMaps:                # change this to 'secrets' if you created a secret
+  - name: kong-plugin-myheader
+    pluginName: myheader
+deployment:
+  userDefinedVolumes:
+    - name: kong-plugin-jwt-aud
+      hostPath:
+        path: /host/go-jwt-aud
+        type: File
+  userDefinedVolumeMounts:
+    - mountPath: /opt/kong/plugins/go-jwt-aud
+      name: kong-plugin-jwt-aud
+      readOnly: true
+kong:
+  customEnv:
+    pluginserver_names:
+      value: kong-plugin-jwt-aud

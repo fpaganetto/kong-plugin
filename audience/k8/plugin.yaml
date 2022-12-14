@@ -1,0 +1,7 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: go-jwt-aud
+config:
+  audience: <AUD>
+plugin: go-jwt-aud
