@@ -6,7 +6,6 @@ import (
 )
 
 type Config struct {
-	Audience string
 }
 
 func New() interface{} {
@@ -14,10 +13,11 @@ func New() interface{} {
 }
 
 func (config Config) Access(kong *pdk.PDK) {
-	host, _ := kong.Request.GetHeader("Authorization")
-	token := GetToken(host)
+	authHeader, _ := kong.Request.GetHeader("Authorization")
+	host, _ := kong.Request.GetHeader("Host")
+	token := GetToken(authHeader)
 	aud := GetAudience(token)
-	if !Contains(aud, config.Audience) {
+	if !Contains(aud, host) {
 		kong.Response.Exit(403, "Invalid audience", make(map[string][]string))
 	}
 }
